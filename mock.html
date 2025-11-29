@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CBT Pro</title>
+
+  <!-- Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          boxShadow: { soft: '0 10px 30px rgba(0,0,0,.06)' },
+          transitionProperty: { 'spacing': 'margin, padding' }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .ring-4 { outline: 4px solid; outline-offset: 2px; }
+    .fade-in { animation: fadeIn .35s ease-out both; }
+    .slide-up { animation: slideUp .35s ease-out both; }
+    @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+    @keyframes slideUp { from { transform: translateY(8px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
+  </style>
+</head>
+
+<body class="bg-gray-100 font-sans text-gray-900">
+
+  <!-- ========================== -->
+  <!-- 🌟 UPDATED TOP NAVBAR 🌟 -->
+  <!-- ========================== -->
+  <header class="sticky top-0 z-40 border-b border-gray-200 bg-white/80 backdrop-blur">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+
+      <!-- Logo -->
+      <div class="flex items-center gap-2">
+        <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white font-bold">CBT</span>
+        <span class="font-semibold tracking-wide">Pro</span>
+      </div>
+
+      <!-- Right Side Buttons -->
+      <div class="flex items-center gap-3">
+
+        <!-- Home -->
+        <button onclick="goToHome()" 
+          class="hidden sm:inline-flex px-3 py-1.5 rounded-lg border border-gray-200 text-sm hover:bg-gray-50 transition">
+          Home
+        </button>
+
+        <!-- 🌟 Beautiful Logout Button -->
+        <button onclick="logout()" 
+          class="px-4 py-2 rounded-xl bg-red-600 text-white font-semibold shadow-soft hover:bg-red-700 transition">
+          Logout
+        </button>
+
+      </div>
+
+    </div>
+  </header>
+  <!-- END NAVBAR -->
+
+  <!-- LOGIN -->
+  <main id="loginPanel" class="p-6 max-w-xl mx-auto mt-10 bg-white rounded-2xl shadow-soft border border-gray-200 fade-in">
+    <h2 class="mb-6 text-3xl font-extrabold text-center">Sign in</h2>
+    <div class="space-y-4">
+      <input id="email" value="user@user.com" class="w-full p-3.5 border rounded-xl" placeholder="Email" />
+      <input id="password" value="1234" type="password" class="w-full p-3.5 border rounded-xl" placeholder="Password" />
+      <button onclick="login()" class="w-full bg-blue-600 text-white py-3.5 rounded-xl">Login</button>
+    </div>
+    <p class="mt-4 text-center text-sm text-gray-600">User: user@user.com / 1234 — Admin: admin@admin.com / 1234</p>
+  </main>
+
+  <!-- USER HOME -->
+  <section id="userHome" class="hidden py-10 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 min-h-[calc(100vh-3.5rem)] fade-in">
+    <div class="max-w-7xl mx-auto px-4">
+
+      <div class="text-center mb-10">
+        <h1 class="text-5xl font-extrabold">Welcome, <span id="welcomeName" class="text-blue-700">User</span></h1>
+        <p class="text-gray-600 mt-2">Your progress is saved automatically.</p>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+        <div class="bg-white border p-6 rounded-2xl shadow-soft text-center">
+          <p class="text-gray-600">Tests Attempted</p>
+          <p id="totalAttempts" class="text-5xl font-extrabold text-blue-700">0</p>
+        </div>
+        <div class="bg-white border p-6 rounded-2xl shadow-soft text-center">
+          <p class="text-gray-600">Average Score</p>
+          <p id="avgScore" class="text-5xl font-extrabold text-green-600">0.00</p>
+        </div>
+        <div class="bg-white border p-6 rounded-2xl shadow-soft text-center">
+          <p class="text-gray-600">Best Score</p>
+          <p id="bestScore" class="text-5xl font-extrabold text-purple-600">0.00</p>
+        </div>
+        <div class="bg-white border p-6 rounded-2xl shadow-soft text-center">
+          <p class="text-gray-600">Accuracy</p>
+          <p id="accuracyRate" class="text-5xl font-extrabold text-indigo-600">0%</p>
+        </div>
+      </div>
+
+      <!-- Recent Attempts -->
+      <div class="bg-white border p-6 rounded-2xl shadow-soft mb-10">
+        <div class="flex justify-between mb-6">
+          <h2 class="text-3xl font-extrabold">Recent Attempts</h2>
+          <button onclick="goToTestSelection()" class="text-blue-700 font-semibold hover:underline">All Tests →</button>
+        </div>
+        <div id="recentAttemptsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="col-span-full text-center py-12 text-gray-500">
+            <p class="text-lg">No attempts yet.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <button onclick="goToTestSelection()" class="bg-blue-600 text-white py-12 rounded-2xl text-2xl font-bold shadow-soft">Start New Test</button>
+        <button onclick="loadAttemptedTests(); show('userDashboard')" class="bg-indigo-600 text-white py-12 rounded-2xl text-2xl font-bold shadow-soft">My Performance</button>
+        <button class="bg-emerald-600 text-white py-12 rounded-2xl text-2xl font-bold shadow-soft" onclick="alert('Coming soon!')">Leaderboard</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section id="userDashboard" class="hidden p-8 max-w-6xl mx-auto bg-white rounded-2xl shadow-soft border">
+    <h2 class="text-4xl font-extrabold text-center mb-10">Available Tests</h2>
+    <div class="max-w-xl mx-auto mb-10">
+      <select id="setSelect" class="w-full p-4 border rounded-xl"></select>
+      <button onclick="startUserTest()" class="w-full mt-4 bg-blue-600 text-white py-4 rounded-xl text-xl font-bold">Start Test</button>
+    </div>
+
+    <h3 class="text-3xl font-extrabold text-center mb-6">Previous Attempts</h3>
+    <div id="attemptedTests" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="col-span-full text-center py-10 text-gray-500">No previous attempts.</div>
+    </div>
+
+    <div class="text-center mt-10">
+      <button onclick="goToHome()" class="bg-gray-700 text-white py-4 rounded-xl text-lg px-10">Back to Home</button>
+    </div>
+  </section>
+
+  <!-- ADMIN -->
+  <section id="adminPanel" class="hidden p-6 max-w-3xl mx-auto bg-white rounded-2xl shadow-soft border mt-12">
+    <h2 class="text-3xl font-bold mb-4">Admin Panel</h2>
+    <textarea id="jsonUpload" rows="5" class="w-full p-3 border rounded-xl mb-3" placeholder='{"name":"Set1","questions":[...]}'> </textarea>
+    <button onclick="uploadSet()" class="px-4 py-2 bg-green-600 text-white rounded-xl">Upload Set</button>
+
+    <h3 class="mt-6 font-semibold">Existing Sets</h3>
+    <ul id="setList" class="list-disc pl-5 mt-2"></ul>
+
+    <button onclick="logout()" class="mt-6 bg-red-600 text-white px-4 py-2 rounded-xl">Logout</button>
+  </section>
+
+  <!-- TEST PANEL -->
+  <section id="testContainer" class="hidden max-w-6xl mx-auto mt-10 bg-white rounded-2xl shadow-soft border fade-in">
+    <div class="flex flex-col md:flex-row">
+
+      <!-- Palette -->
+      <aside class="md:w-1/4 bg-gray-50 p-5 border-r h-[85vh] overflow-y-auto">
+        <h3 class="font-bold text-center mb-4">Question Palette</h3>
+        <div id="qPalette" class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-4 gap-3"></div>
+
+        <div class="mt-5 bg-white p-3 rounded-xl border space-y-1 text-sm">
+          <p><span class="inline-block w-3 h-3 bg-green-500"></span> Answered</p>
+          <p><span class="inline-block w-3 h-3 bg-purple-500"></span> Review</p>
+          <p><span class="inline-block w-3 h-3 bg-yellow-500"></span> Ans+Review</p>
+          <p><span class="inline-block w-3 h-3 bg-red-300"></span> Not Visited</p>
+        </div>
+
+        <div id="stats" class="mt-4 bg-white p-3 border rounded-xl text-sm"></div>
+      </aside>
+
+      <!-- Questions -->
+      <div class="md:w-3/4 p-6 flex flex-col">
+
+        <div class="flex justify-between mb-4">
+          <div id="timer" class="font-bold text-red-600 bg-red-100 px-4 py-2 rounded-xl shadow">Time: 90:00</div>
+          <div>
+            <button onclick="logout()" class="bg-red-600 text-white py-2 px-4 rounded-xl">Logout</button>
+          </div>
+        </div>
+
+        <div id="questionArea" class="mb-6 text-lg leading-relaxed font-medium"></div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-auto">
+          <button onclick="clearResponse()" class="bg-gray-700 text-white py-3 rounded-xl">Clear</button>
+          <button onclick="markForReview()" class="bg-yellow-500 text-white py-3 rounded-xl">Mark</button>
+          <button onclick="saveNext()" class="bg-blue-600 text-white py-3 rounded-xl">Save & Next</button>
+          <button onclick="submitTest()" class="bg-green-600 text-white py-3 rounded-xl">Submit</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULT PANEL -->
+  <section id="resultPanel" class="hidden p-8 max-w-4xl mx-auto bg-white mt-10 rounded-2xl shadow-soft border">
+    <h2 class="text-3xl font-bold mb-4">Test Result</h2>
+
+    <div id="resultStats" class="mb-4 text-lg"></div>
+
+    <canvas id="resultChart" class="max-w-xs mx-auto"></canvas>
+
+    <div class="mt-6">
+      <h3 class="font-semibold mb-2">Review Questions</h3>
+      <div id="reviewSummary" class="mb-4 text-sm"></div>
+
+      <div class="flex gap-2 mb-4">
+        <button onclick="prevReviewQuestion()" class="bg-gray-700 text-white py-2 px-4 rounded-lg" disabled>Prev</button>
+        <select id="reviewSelect" class="flex-1 p-2 border rounded-lg"></select>
+        <button onclick="nextReviewQuestion()" class="bg-gray-700 text-white py-2 px-4 rounded-lg" disabled>Next</button>
+      </div>
+
+      <div id="reviewArea" class="border p-5 rounded-xl bg-gray-50"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+      <button onclick="downloadPDF()" class="bg-blue-600 text-white py-3 rounded-xl">Download PDF</button>
+      <button onclick="goToTestSelection()" class="bg-indigo-600 text-white py-3 rounded-xl">Go to Tests</button>
+      <button onclick="goToHome()" class="bg-gray-700 text-white py-3 rounded-xl">Back Home</button>
+    </div>
+  </section>
+
+  <!-- =================== -->
+  <!-- MAIN SCRIPT        -->
+  <!-- =================== -->
+  <script>
+
+    const admin={email:"admin@admin.com",pass:"1234"};
+    const user={email:"user@user.com",pass:"1234"};
+
+    let questions=[],answers=[],status=[];
+    let currentQ=0,setName="",timeLeft=0,timerInterval;
+    let reviewableQuestions=[],currentReviewIndex=-1;
+    let resultChartInstance=null;
+
+    function show(id){
+      ["loginPanel","userHome","userDashboard","adminPanel","testContainer","resultPanel"].forEach(i=>document.getElementById(i).classList.add("hidden"));
+      document.getElementById(id).classList.remove("hidden");
+      if(id==="userHome"){refreshHomeStats();}
+    }
+
+    function login(){
+      const e=email.value.trim(),p=password.value.trim();
+      if(e===admin.email&&p===admin.pass){loadSetList("admin");show('adminPanel');}
+      else if(e===user.email&&p===user.pass){
+        welcomeName.textContent=e.split("@")[0];
+        loadSetList('user');loadAttemptedTests();refreshHomeStats();
+        show('userHome');
+      }else alert("Invalid login");
+    }
+
+    function logout(){clearInterval(timerInterval);show('loginPanel');}
+
+    function loadSetList(type){
+      const sets=JSON.parse(localStorage.getItem('sets')||'{}');
+      if(document.getElementById('setList')) setList.innerHTML="";
+      setSelect.innerHTML='<option value="">Select Set</option>';
+      for(let s in sets){
+        if(type==='admin'){
+          let li=document.createElement("li");
+          li.innerHTML=`${s} <button onclick="deleteSet('${s}')" class="text-red-600">Delete</button>`;
+          setList.appendChild(li);
+        }
+        let opt=document.createElement("option");
+        opt.value=s;opt.textContent=s;
+        setSelect.appendChild(opt);
+      }
+    }
+
+    function uploadSet(){
+      try{
+        const d=JSON.parse(jsonUpload.value);
+        if(!d.name||!Array.isArray(d.questions))throw "";
+        const all=JSON.parse(localStorage.getItem('sets')||'{}');
+        all[d.name]=d.questions;
+        localStorage.setItem('sets',JSON.stringify(all));
+        jsonUpload.value="";
+        loadSetList('admin');
+        alert("Set uploaded");
+      }catch{alert("Invalid JSON");}
+    }
+
+    function deleteSet(n){
+      const sets=JSON.parse(localStorage.getItem('sets')||'{}');
+      delete sets[n];
+      localStorage.setItem('sets',JSON.stringify(sets));
+      const attempts=JSON.parse(localStorage.getItem('userAttempts')||'{}');
+      delete attempts[n];
+      localStorage.setItem('userAttempts',JSON.stringify(attempts));
+      loadSetList('admin');
+    }
+
+    function refreshHomeStats(){
+      const attempts=JSON.parse(localStorage.getItem('userAttempts')||'{}');
+      const keys=Object.keys(attempts);
+      totalAttempts.textContent=keys.length;
+      let totalScore=0,best=0,correct=0,totalAttempted=0;
+      keys.forEach(k=>{
+        const a=attempts[k];
+        totalScore+=a.score;
+        if(a.score>best) best=a.score;
+        correct+=a.correct;
+        totalAttempted+=a.attempted;
+      });
+      avgScore.textContent=keys.length?(totalScore/keys.length).toFixed(2):"0.00";
+      bestScore.textContent=best.toFixed(2);
+      accuracyRate.textContent=totalAttempted?(Math.round(correct/totalAttempted*100))+"%":"0%";
+      refreshRecentAttempts();
+    }
+
+    function refreshRecentAttempts(){
+      const log=JSON.parse(localStorage.getItem('attemptLog')||'[]');
+      recentAttemptsList.innerHTML="";
+      if(log.length===0){
+        recentAttemptsList.innerHTML='<div class="col-span-full text-center py-12 text-gray-500">No attempts.</div>';
+        return;
+      }
+      log.slice(-6).reverse().forEach(r=>{
+        const d=new Date(r.timestamp).toLocaleString();
+        const card=document.createElement("div");
+        card.className="bg-white border p-5 rounded-2xl shadow-soft";
+        card.innerHTML=`
+          <h4 class="text-lg font-bold">${r.setName}</h4>
+          <p class="text-gray-600">${d}</p>
+          <p class="mt-1 font-semibold">Score: ${r.score.toFixed(2)}</p>
+        `;
+        recentAttemptsList.appendChild(card);
+      });
+    }
+
+    function goToTestSelection(){loadSetList('user');loadAttemptedTests();show('userDashboard');}
+    function goToHome(){refreshHomeStats();show('userHome');}
+
+    function loadAttemptedTests(){
+      const attempts=JSON.parse(localStorage.getItem('userAttempts')||'{}');
+      attemptedTests.innerHTML="";
+      const sets=Object.keys(attempts);
+      if(sets.length===0){attemptedTests.innerHTML='<div class="col-span-full text-center py-10 text-gray-500">No attempts yet.</div>';return;}
+      sets.forEach(s=>{
+        const a=attempts[s];
+        const card=document.createElement("div");
+        card.className="bg-white border rounded-2xl p-5 shadow-soft";
+        card.innerHTML=`
+          <h4 class="text-xl font-bold">${s}</h4>
+          <p>Score: ${a.score.toFixed(2)}</p>
+          <p>Correct: ${a.correct} | Wrong: ${a.wrong}</p>
+          <div class="mt-2 flex gap-3">
+            <button class="px-3 py-2 bg-blue-600 text-white rounded-xl" onclick="viewResult('${s}')">View</button>
+            <button class="px-3 py-2 bg-indigo-600 text-white rounded-xl" onclick="reattemptTest('${s}')">Reattempt</button>
+          </div>`;
+        attemptedTests.appendChild(card);
+      });
+    }
+
+    function startUserTest(){
+      setName=setSelect.value;
+      if(!setName)return alert("Select a set");
+      const sets=JSON.parse(localStorage.getItem('sets'));
+      questions=sets[setName];
+      answers=Array(questions.length).fill(null);
+      status=Array(questions.length).fill('notVisited');
+      currentQ=0;
+      renderPalette();
+      startTimer();
+      renderQuestion();
+      show('testContainer');
+    }
+
+    function reattemptTest(s){
+      setName=s;
+      const sets=JSON.parse(localStorage.getItem('sets'));
+      questions=sets[setName];
+      answers=Array(questions.length).fill(null);
+      status=Array(questions.length).fill('notVisited');
+      currentQ=0;
+      renderPalette();
+      startTimer();
+      renderQuestion();
+      show('testContainer');
+    }
+
+    function renderPalette(){
+      qPalette.innerHTML="";
+      questions.forEach((_,i)=>{
+        const b=document.createElement("button");
+        b.id="q-"+i;
+        b.textContent=i+1;
+        b.onclick=()=>goTo(i);
+        b.className="p-2 rounded bg-red-300 text-black";
+        qPalette.appendChild(b);
+      });
+      updatePaletteColors();
+      updateStats();
+    }
+
+    function updatePaletteColors(){
+      questions.forEach((_,i)=>{
+        const b=document.getElementById("q-"+i);
+        let c="bg-red-300 text-black";
+        if(status[i]==='attempted')c="bg-green-500 text-white";
+        if(status[i]==='marked')c="bg-purple-500 text-white";
+        if(status[i]==='markedAnswered')c="bg-yellow-500 text-white";
+        b.className="p-2 rounded "+c;
+        if(i===currentQ)b.classList.add("ring-4","ring-blue-400");
+      });
+    }
+
+    function renderQuestion(){
+      const q=questions[currentQ];
+      questionArea.innerHTML=`
+        <h3 class="font-semibold mb-2">Q${currentQ+1}: ${q.q}</h3>
+        ${['a','b','c','d'].map(o=>`
+          <label class="block mt-2">
+            <input type="radio" name="opt" value="${o}" ${answers[currentQ]===o?'checked':''} class="mr-2"/>
+            <span class="inline-flex items-start gap-2 rounded-xl px-3 py-2 border bg-white">
+              <span class="font-semibold">${o.toUpperCase()}.</span> ${q[o]}
+            </span>
+          </label>
+        `).join('')}
+      `;
+      updatePaletteColors();
+    }
+
+    function goTo(i){currentQ=i;renderQuestion();}
+
+    function updateStatus(){
+      let st=answers[currentQ]?'attempted':'notVisited';
+      if(status[currentQ].includes('marked')) st=answers[currentQ]?'markedAnswered':'marked';
+      status[currentQ]=st;
+      updatePaletteColors();updateStats();
+    }
+
+    function updateStats(){
+      const a=status.filter(s=>s==='attempted').length;
+      const ar=status.filter(s=>s==='markedAnswered').length;
+      const r=status.filter(s=>s==='marked').length;
+      const nv=status.filter(s=>s==='notVisited').length;
+      stats.innerHTML=`
+        <p>Answered: ${a}</p>
+        <p>Ans+Review: ${ar}</p>
+        <p>Review: ${r}</p>
+        <p>Not Visited: ${nv}</p>`;
+    }
+
+    function clearResponse(){answers[currentQ]=null;renderQuestion();updateStatus();}
+    function markForReview(){
+      status[currentQ]=status[currentQ].includes('marked')?(answers[currentQ]?'attempted':'notVisited'):(answers[currentQ]?'markedAnswered':'marked');
+      updateStatus();
+    }
+    function saveNext(){
+      const s=document.querySelector('input[name="opt"]:checked');
+      answers[currentQ]=s?s.value:null;
+      updateStatus();
+      if(currentQ<questions.length-1)currentQ++;
+      renderQuestion();
+    }
+
+    function startTimer(){
+      clearInterval(timerInterval);
+      timeLeft=90*60;
+      timerInterval=setInterval(()=>{
+        let m=Math.floor(timeLeft/60),s=timeLeft%60;
+        timer.textContent=`Time: ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        if(timeLeft--<=0){clearInterval(timerInterval);submitTest();}
+      },1000);
+    }
+
+    function submitTest(){
+      clearInterval(timerInterval);
+      let correct=0,wrong=0,attempted=0;
+      reviewableQuestions=[];
+      answers.forEach((a,i)=>{
+        if(a!==null){
+          attempted++;
+          if(a===questions[i].ans)correct++;
+          else wrong++;
+        }
+        if(a!==questions[i].ans||a===null)reviewableQuestions.push(i);
+      });
+      const score=correct-wrong*0.25;
+
+      const attempts=JSON.parse(localStorage.getItem('userAttempts')||'{}');
+      attempts[setName]={score,correct,wrong,attempted,total:questions.length,answers:answers.slice()};
+      localStorage.setItem('userAttempts',JSON.stringify(attempts));
+
+      const log=JSON.parse(localStorage.getItem('attemptLog')||'[]');
+      log.push({timestamp:Date.now(),setName,score,correct,wrong,attempted,total:questions.length});
+      localStorage.setItem('attemptLog',JSON.stringify(log));
+
+      resultStats.innerHTML=`
+        <p><b>Set:</b> ${setName}</p>
+        <p><b>Total:</b> ${questions.length}</p>
+        <p><b>Attempted:</b> ${attempted}</p>
+        <p><b>Correct:</b> ${correct}</p>
+        <p><b>Wrong:</b> ${wrong}</p>
+        <p class="mt-2 text-xl font-bold">Score: ${score.toFixed(2)}</p>`;
+
+      if(resultChartInstance)resultChartInstance.destroy();
+      resultChartInstance=new Chart(resultChart,{
+        type:'pie',
+        data:{
+          labels:["Correct","Wrong","Unattempted"],
+          datasets:[{data:[correct,wrong,questions.length-attempted],backgroundColor:["#10B981","#EF4444","#6366F1"]}]
+        }
+      });
+
+      const sel=reviewSelect;
+      sel.innerHTML='<option value="">Select Question</option>';
+      reviewableQuestions.forEach(i=>{
+        const opt=document.createElement("option");
+        opt.value=i;
+        opt.textContent=`Question ${i+1}`;
+        sel.appendChild(opt);
+      });
+
+      reviewSummary.innerHTML=`
+        <p><b>To Review:</b> ${reviewableQuestions.length}</p>
+      `;
+
+      sel.onchange=function(){
+        if(this.value==="")renderReviewQuestion(-1);
+        else renderReviewQuestion(reviewableQuestions.indexOf(parseInt(this.value)));
+      };
+
+      show('resultPanel');
+      if(reviewableQuestions.length>0)renderReviewQuestion(0);
+      refreshHomeStats();
+    }
+
+    function renderReviewQuestion(idx){
+      if(idx<0||idx>=reviewableQuestions.length){
+        reviewArea.innerHTML="";currentReviewIndex=-1;updateNav();return;
+      }
+      currentReviewIndex=idx;
+      const i=reviewableQuestions[idx],q=questions[i],ua=answers[i]||"None";
+      reviewSelect.value=i;
+      reviewArea.innerHTML=`
+        <h3 class="font-semibold text-lg">Q${i+1}: ${q.q}</h3>
+        ${['a','b','c','d'].map(o=>`
+          <p class="${o===q.ans?'text-green-600 font-bold':ua===o?'text-red-600':''}">
+            ${o.toUpperCase()}: ${q[o]} ${o===q.ans?'(Correct)':ua===o?'(Your Answer)':''}
+          </p>`).join('')}
+        <p class="mt-2"><b>Your Answer:</b> ${ua.toUpperCase()}</p>
+        ${q.explanation?`<p class="mt-2"><b>Explanation:</b> ${q.explanation}</p>`:''}
+      `;
+      updateNav();
+    }
+
+    function updateNav(){
+      document.querySelector('button[onclick="prevReviewQuestion()"]').disabled=currentReviewIndex<=0;
+      document.querySelector('button[onclick="nextReviewQuestion()"]').disabled=currentReviewIndex>=reviewableQuestions.length-1;
+    }
+
+    function prevReviewQuestion(){if(currentReviewIndex>0)renderReviewQuestion(currentReviewIndex-1);}
+    function nextReviewQuestion(){if(currentReviewIndex<reviewableQuestions.length-1)renderReviewQuestion(currentReviewIndex+1);}
+
+    function viewResult(s){
+      setName=s;
+      const attempts=JSON.parse(localStorage.getItem('userAttempts')||'{}');
+      const a=attempts[s];
+      questions=JSON.parse(localStorage.getItem('sets'))[s];
+      answers=a.answers;
+      resultStats.innerHTML=`
+        <p><b>Set:</b> ${s}</p>
+        <p><b>Total:</b> ${a.total}</p>
+        <p><b>Attempted:</b> ${a.attempted}</p>
+        <p><b>Correct:</b> ${a.correct}</p>
+        <p><b>Wrong:</b> ${a.wrong}</p>
+        <p class="mt-2 text-xl font-bold">Score: ${a.score.toFixed(2)}</p>`;
+      reviewableQuestions=[];
+      answers.forEach((x,i)=>{if(x!==questions[i].ans||x===null)reviewableQuestions.push(i);});
+      if(resultChartInstance)resultChartInstance.destroy();
+      resultChartInstance=new Chart(resultChart,{
+        type:'pie',
+        data:{
+          labels:["Correct","Wrong","Unattempted"],
+          datasets:[{data:[a.correct,a.wrong,a.total-a.attempted],backgroundColor:["#10B981","#EF4444","#6366F1"]}]
+        }
+      });
+      show('resultPanel');
+      if(reviewableQuestions.length>0)renderReviewQuestion(0);
+    }
+
+    async function downloadPDF(){
+      const {jsPDF}=window.jspdf;
+      const doc=new jsPDF();
+      let y=10;
+
+      doc.setFontSize(18);
+      doc.text(`CBT Result - ${setName}`,10,y);y+=10;
+
+      questions.forEach((q,i)=>{
+        const ua=answers[i]?answers[i].toUpperCase():'None';
+        const ca=q.ans.toUpperCase();
+        let block=`Q${i+1}: ${q.q}
+A: ${q.a}
+B: ${q.b}
+C: ${q.c}
+D: ${q.d}
+Your Answer: ${ua} | Correct: ${ca}`;
+        if(q.explanation)block+=`\nExplanation: ${q.explanation}`;
+        const split=doc.splitTextToSize(block,180);
+        if(y+split.length*6>280){doc.addPage();y=10;}
+        doc.text(split,10,y);
+        y+=split.length*6+5;
+      });
+
+      doc.save(`${setName}_Result.pdf`);
+    }
+
+    (function seed(){
+      const sets=JSON.parse(localStorage.getItem('sets')||'{}');
+      if(Object.keys(sets).length===0){
+        const demo={
+          "Demo Test":[
+            {q:"2+2=?",a:"3",b:"4",c:"5",d:"6",ans:"b",explanation:"2+2=4"},
+            {q:"Capital of France?",a:"Berlin",b:"Madrid",c:"Paris",d:"Rome",ans:"c"},
+            {q:"Sun rises in the...",a:"North",b:"South",c:"East",d:"West",ans:"c"}
+          ]
+        };
+        localStorage.setItem('sets',JSON.stringify(demo));
+      }
+    })();
+
+  </script>
+
+</body>
+</html>

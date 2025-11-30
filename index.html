@@ -37,28 +37,16 @@
   <!-- ========================== -->
   <header class="sticky top-0 z-40 border-b border-gray-200 bg-white/80 backdrop-blur">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
-
-      <!-- Logo -->
       <div class="flex items-center gap-2">
         <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-white font-bold">CBT</span>
         <span class="font-semibold tracking-wide">Pro</span>
       </div>
-
-      <!-- Right Side Buttons -->
       <div class="flex items-center gap-3">
-        <button onclick="goToHome()" 
-          class="hidden sm:inline-flex px-3 py-1.5 rounded-lg border border-gray-200 text-sm hover:bg-gray-50 transition">
-          Home
-        </button>
-        <button onclick="logout()" 
-          class="px-4 py-2 rounded-xl bg-red-600 text-white font-semibold shadow-soft hover:bg-red-700 transition">
-          Logout
-        </button>
+        <button onclick="goToHome()" class="hidden sm:inline-flex px-3 py-1.5 rounded-lg border border-gray-200 text-sm hover:bg-gray-50 transition">Home</button>
+        <button onclick="logout()" class="px-4 py-2 rounded-xl bg-red-600 text-white font-semibold shadow-soft hover:bg-red-700 transition">Logout</button>
       </div>
-
     </div>
   </header>
-  <!-- END NAVBAR -->
 
   <!-- LOGIN -->
   <main id="loginPanel" class="p-6 max-w-xl mx-auto mt-10 bg-white rounded-2xl shadow-soft border border-gray-200 fade-in">
@@ -74,7 +62,6 @@
   <!-- USER HOME -->
   <section id="userHome" class="hidden py-10 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 min-h-[calc(100vh-3.5rem)] fade-in">
     <div class="max-w-7xl mx-auto px-4">
-
       <div class="text-center mb-10">
         <h1 class="text-5xl font-extrabold">Welcome, <span id="welcomeName" class="text-blue-700">User</span></h1>
         <p class="text-gray-600 mt-2">Your progress is saved automatically.</p>
@@ -155,7 +142,6 @@
   <!-- TEST PANEL -->
   <section id="testContainer" class="hidden max-w-6xl mx-auto mt-10 bg-white rounded-2xl shadow-soft border fade-in">
     <div class="flex flex-col md:flex-row">
-
       <!-- Palette -->
       <aside class="md:w-1/4 bg-gray-50 p-5 border-r h-[85vh] overflow-y-auto">
         <h3 class="font-bold text-center mb-4">Question Palette</h3>
@@ -173,12 +159,9 @@
 
       <!-- Questions -->
       <div class="md:w-3/4 p-6 flex flex-col">
-
         <div class="flex justify-between mb-4">
           <div id="timer" class="font-bold text-red-600 bg-red-100 px-4 py-2 rounded-xl shadow">Time: 90:00</div>
-          <div>
-            <button onclick="logout()" class="bg-red-600 text-white py-2 px-4 rounded-xl">Logout</button>
-          </div>
+          <div><button onclick="logout()" class="bg-red-600 text-white py-2 px-4 rounded-xl">Logout</button></div>
         </div>
 
         <div id="questionArea" class="mb-6 text-lg leading-relaxed font-medium"></div>
@@ -189,7 +172,6 @@
           <button onclick="saveNext()" class="bg-blue-600 text-white py-3 rounded-xl">Save & Next</button>
           <button onclick="submitTest()" class="bg-green-600 text-white py-3 rounded-xl">Submit</button>
         </div>
-
       </div>
     </div>
   </section>
@@ -207,47 +189,39 @@
 
       <!-- Tabs -->
       <div class="flex gap-3 mb-4">
-        <button id="tabYour" onclick="switchTab('your')" 
-          class="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold">
-          Your Answers
-        </button>
-
-        <button id="tabCorrect" onclick="switchTab('correct')" 
-          class="px-4 py-2 rounded-lg bg-gray-300 text-gray-900 font-semibold">
-          Correct Answers
-        </button>
-      </div>
-
-      <!-- Your Answers Section -->
-      <div id="yourReviewSection">
-        <div id="reviewSummary" class="mb-4 text-sm"></div>
-
-        <div class="flex gap-2 mb-4">
-          <button onclick="prevReviewQuestion()" class="bg-gray-700 text-white py-2 px-4 rounded-lg" disabled>Prev</button>
-          <select id="reviewSelect" class="flex-1 p-2 border rounded-lg"></select>
-          <button onclick="nextReviewQuestion()" class="bg-gray-700 text-white py-2 px-4 rounded-lg" disabled>Next</button>
-        </div>
-
-        <div id="reviewArea" class="border p-5 rounded-xl bg-gray-50"></div>
+        <button id="tabCorrect" onclick="switchTab('correct')" class="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold">Correct</button>
+        <button id="tabWrong"   onclick="switchTab('wrong')"   class="px-4 py-2 rounded-lg bg-gray-300 text-gray-900 font-semibold">Wrong</button>
+        <button id="tabUnattempted" onclick="switchTab('unattempted')" class="px-4 py-2 rounded-lg bg-gray-300 text-gray-900 font-semibold">Unattempted</button>
       </div>
 
       <!-- Correct Answers Section (Navigation-based) -->
-      <div id="correctReviewSection" class="hidden">
+      <div id="correctReviewSection">
         <div class="flex gap-2 mb-4">
-          <button onclick="prevCorrect()" id="prevCorrectBtn"
-            class="bg-gray-700 text-white py-2 px-4 rounded-lg" disabled>
-            Prev
-          </button>
-
+          <button onclick="prevCorrect()" id="prevCorrectBtn" class="bg-gray-700 text-white py-2 px-4 rounded-lg" disabled>Prev</button>
           <select id="correctSelect" class="flex-1 p-2 border rounded-lg"></select>
-
-          <button onclick="nextCorrect()" id="nextCorrectBtn"
-            class="bg-gray-700 text-white py-2 px-4 rounded-lg" disabled>
-            Next
-          </button>
+          <button onclick="nextCorrect()" id="nextCorrectBtn" class="bg-gray-700 text-white py-2 px-4 rounded-lg" disabled>Next</button>
         </div>
-
         <div id="correctArea" class="border p-5 rounded-xl bg-green-50"></div>
+      </div>
+
+      <!-- Wrong Answers Section -->
+      <div id="wrongReviewSection" class="hidden">
+        <div class="flex gap-2 mb-4">
+          <button onclick="prevWrong()" id="prevWrongBtn" class="bg-gray-700 text-white py-2 px-4 rounded-lg" disabled>Prev</button>
+          <select id="wrongSelect" class="flex-1 p-2 border rounded-lg"></select>
+          <button onclick="nextWrong()" id="nextWrongBtn" class="bg-gray-700 text-white py-2 px-4 rounded-lg" disabled>Next</button>
+        </div>
+        <div id="wrongArea" class="border p-5 rounded-xl bg-red-50"></div>
+      </div>
+
+      <!-- Unattempted Section -->
+      <div id="unattemptedReviewSection" class="hidden">
+        <div class="flex gap-2 mb-4">
+          <button onclick="prevUnattempted()" id="prevUnattemptedBtn" class="bg-gray-700 text-white py-2 px-4 rounded-lg" disabled>Prev</button>
+          <select id="unattemptedSelect" class="flex-1 p-2 border rounded-lg"></select>
+          <button onclick="nextUnattempted()" id="nextUnattemptedBtn" class="bg-gray-700 text-white py-2 px-4 rounded-lg" disabled>Next</button>
+        </div>
+        <div id="unattemptedArea" class="border p-5 rounded-xl bg-gray-50"></div>
       </div>
     </div>
 
@@ -264,10 +238,7 @@
       <h3 id="alertTitle" class="text-2xl font-bold text-center mb-3 text-blue-700">Alert</h3>
       <p id="alertMessage" class="text-gray-700 text-center leading-relaxed"></p>
       <div class="mt-6 flex justify-center">
-        <button onclick="closeAlert()" 
-          class="px-5 py-2 bg-blue-600 text-white rounded-xl font-semibold shadow hover:bg-blue-700 transition">
-          OK
-        </button>
+        <button onclick="closeAlert()" class="px-5 py-2 bg-blue-600 text-white rounded-xl font-semibold shadow hover:bg-blue-700 transition">OK</button>
       </div>
     </div>
   </div>
@@ -279,27 +250,17 @@
 
       <label class="block mb-3">
         <span class="font-semibold text-gray-700">Test Duration (minutes)</span>
-        <input id="durationInput" type="number" min="1"
-          class="w-full mt-1 p-3 border rounded-xl"
-          placeholder="Enter duration (e.g., 90)">
+        <input id="durationInput" type="number" min="1" class="w-full mt-1 p-3 border rounded-xl" placeholder="Enter duration (e.g., 90)">
       </label>
 
       <label class="block mb-3">
         <span class="font-semibold text-gray-700">Negative Mark per Wrong Answer</span>
-        <input id="negativeInput" type="number" step="0.01" min="0"
-          class="w-full mt-1 p-3 border rounded-xl"
-          placeholder="Enter negative marking (e.g., 0.25)">
+        <input id="negativeInput" type="number" step="0.01" min="0" class="w-full mt-1 p-3 border rounded-xl" placeholder="Enter negative marking (e.g., 0.25)">
       </label>
 
       <div class="mt-6 flex justify-center gap-3">
-        <button onclick="closeSettings()"
-          class="px-5 py-2 bg-gray-600 text-white rounded-xl shadow hover:bg-gray-700 transition">
-          Cancel
-        </button>
-        <button onclick="saveSettings()"
-          class="px-5 py-2 bg-blue-600 text-white rounded-xl shadow hover:bg-blue-700 transition">
-          Save
-        </button>
+        <button onclick="closeSettings()" class="px-5 py-2 bg-gray-600 text-white rounded-xl shadow hover:bg-gray-700 transition">Cancel</button>
+        <button onclick="saveSettings()" class="px-5 py-2 bg-blue-600 text-white rounded-xl shadow hover:bg-blue-700 transition">Save</button>
       </div>
     </div>
   </div>
@@ -322,7 +283,7 @@
     }
 
     /* ========= SETTINGS MODAL ========= */
-    let _afterSettings = null; // callback after saving
+    let _afterSettings = null;
     function openSettings(cb) {
       _afterSettings = typeof cb === 'function' ? cb : null;
       document.getElementById("durationInput").value = userTestDuration;
@@ -338,10 +299,8 @@
     function saveSettings() {
       const d = parseInt(document.getElementById("durationInput").value);
       const n = parseFloat(document.getElementById("negativeInput").value);
-
       if (!isNaN(d) && d > 0) userTestDuration = d;
       if (!isNaN(n) && n >= 0) negativeMark = n;
-
       const cb = _afterSettings;
       closeSettings();
       showAlert("Settings Saved", `Duration: ${userTestDuration} minutes<br>Negative Mark: -${negativeMark}`);
@@ -353,15 +312,15 @@
 
     let questions=[],answers=[],status=[];
     let currentQ=0,setName="",timeLeft=0,timerInterval;
-    let reviewableQuestions=[],currentReviewIndex=-1;
     let resultChartInstance=null;
 
-    /* ✅ NEW: Correct Answers navigation state */
-    let correctIndex = 0;
+    // Review lists & navigation indices
+    let wrongList=[], unattemptedList=[];
+    let correctIndex=0, wrongIndex=0, unattemptedIndex=0;
 
-    /* 🔥 NEW: User-selected settings */
-    let userTestDuration = 90;   // default 90 mins
-    let negativeMark = 0.25;     // default -0.25
+    // User settings
+    let userTestDuration = 90;
+    let negativeMark = 0.25;
 
     function show(id){
       ["loginPanel","userHome","userDashboard","adminPanel","testContainer","resultPanel"].forEach(i=>document.getElementById(i).classList.add("hidden"));
@@ -485,11 +444,10 @@
       });
     }
 
-    // Settings flow replaces prompts
+    // Settings flow
     function startUserTest(){
       setName=setSelect.value;
       if(!setName)return showAlert("Select a Set","Please select a test set to continue.");
-
       openSettings(()=>{
         const sets=JSON.parse(localStorage.getItem('sets'));
         questions=sets[setName];
@@ -546,10 +504,7 @@
 
     function renderQuestion(){
       const q=questions[currentQ];
-
-      // Dynamically include up to 5 options (a-e)
       const optionKeys = ['a','b','c','d','e'].filter(k => q[k] !== undefined && q[k] !== null && String(q[k]).trim() !== '');
-
       questionArea.innerHTML=`
         <h3 class="font-semibold mb-2">Q${currentQ+1}: ${q.q}</h3>
         ${optionKeys.map(o=>`
@@ -578,18 +533,11 @@
       const ar=status.filter(s=>s==='markedAnswered').length;
       const r=status.filter(s=>s==='marked').length;
       const nv=status.filter(s=>s==='notVisited').length;
-      stats.innerHTML=`
-        <p>Answered: ${a}</p>
-        <p>Ans+Review: ${ar}</p>
-        <p>Review: ${r}</p>
-        <p>Not Visited: ${nv}</p>`;
+      stats.innerHTML=`<p>Answered: ${a}</p><p>Ans+Review: ${ar}</p><p>Review: ${r}</p><p>Not Visited: ${nv}</p>`;
     }
 
     function clearResponse(){answers[currentQ]=null;renderQuestion();updateStatus();}
-    function markForReview(){
-      status[currentQ]=status[currentQ].includes('marked')?(answers[currentQ]?'attempted':'notVisited'):(answers[currentQ]?'markedAnswered':'marked');
-      updateStatus();
-    }
+    function markForReview(){status[currentQ]=status[currentQ].includes('marked')?(answers[currentQ]?'attempted':'notVisited'):(answers[currentQ]?'markedAnswered':'marked');updateStatus();}
     function saveNext(){
       const s=document.querySelector('input[name="opt"]:checked');
       answers[currentQ]=s?s.value:null;
@@ -600,8 +548,7 @@
 
     function startTimer(){
       clearInterval(timerInterval);
-      timeLeft = userTestDuration * 60;  // 🔥 dynamic time
-
+      timeLeft = userTestDuration * 60;
       timerInterval=setInterval(()=>{
         let m=Math.floor(timeLeft/60),s=timeLeft%60;
         timer.textContent=`Time: ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
@@ -612,17 +559,16 @@
     function submitTest(){
       clearInterval(timerInterval);
       let correct=0,wrong=0,attempted=0;
-      reviewableQuestions=[];
+      wrongList=[]; unattemptedList=[];
       answers.forEach((a,i)=>{
         if(a!==null){
           attempted++;
-          if(a===questions[i].ans)correct++;
-          else wrong++;
+          if(a===questions[i].ans)correct++; else { wrong++; wrongList.push(i); }
+        } else {
+          unattemptedList.push(i);
         }
-        if(a!==questions[i].ans||a===null)reviewableQuestions.push(i);
       });
-
-      const score = correct - wrong * negativeMark;  // 🔥 dynamic negative marking
+      const score = correct - wrong * negativeMark;
 
       const attempts=JSON.parse(localStorage.getItem('userAttempts')||'{}');
       attempts[setName]={score,correct,wrong,attempted,total:questions.length,answers:answers.slice()};
@@ -638,158 +584,117 @@
         <p><b>Attempted:</b> ${attempted}</p>
         <p><b>Correct:</b> ${correct}</p>
         <p><b>Wrong:</b> ${wrong}</p>
+        <p><b>Unattempted:</b> ${questions.length - attempted}</p>
         <p><b>Negative Marking:</b> -${negativeMark}</p>
         <p class="mt-2 text-xl font-bold">Score: ${score.toFixed(2)}</p>`;
 
       if(resultChartInstance)resultChartInstance.destroy();
       resultChartInstance=new Chart(resultChart,{
         type:'pie',
-        data:{
-          labels:["Correct","Wrong","Unattempted"],
-          datasets:[{data:[correct,wrong,questions.length-attempted],backgroundColor:["#10B981","#EF4444","#6366F1"]}]
-        }
+        data:{ labels:["Correct","Wrong","Unattempted"], datasets:[{data:[correct,wrong,questions.length-attempted],backgroundColor:["#10B981","#EF4444","#6366F1"]}]}
       });
-
-      const sel=reviewSelect;
-      sel.innerHTML='<option value="">Select Question</option>';
-      reviewableQuestions.forEach(i=>{
-        const opt=document.createElement("option");
-        opt.value=i;
-        opt.textContent=`Question ${i+1}`;
-        sel.appendChild(opt);
-      });
-
-      reviewSummary.innerHTML=`
-        <p><b>To Review:</b> ${reviewableQuestions.length}</p>
-      `;
-
-      sel.onchange=function(){
-        if(this.value==="")renderReviewQuestion(-1);
-        else renderReviewQuestion(reviewableQuestions.indexOf(parseInt(this.value)));
-      };
 
       show('resultPanel');
-      if(reviewableQuestions.length>0)renderReviewQuestion(0);
-      // default to "Your Answers" tab on result
-      switchTab('your');
+      switchTab('correct'); // default
       refreshHomeStats();
     }
 
-    function renderReviewQuestion(idx){
-      if(idx<0||idx>=reviewableQuestions.length){
-        reviewArea.innerHTML="";currentReviewIndex=-1;updateNav();return;
-      }
-      currentReviewIndex=idx;
-      const i=reviewableQuestions[idx],q=questions[i],ua=answers[i]||"None";
-
-      // dynamic options for review
-      const optionKeys = ['a','b','c','d','e'].filter(k => q[k] !== undefined && q[k] !== null && String(q[k]).trim() !== '');
-
-      reviewSelect.value=i;
-      reviewArea.innerHTML=`
-        <h3 class="font-semibold text-lg">Q${i+1}: ${q.q}</h3>
-        ${optionKeys.map(o=>`
-          <p class="${o===q.ans?'text-green-600 font-bold':ua===o?'text-red-600':''}">
-            ${o.toUpperCase()}: ${q[o]} ${o===q.ans?'(Correct)':ua===o?'(Your Answer)':''}
-          </p>`).join('')}
-        <p class="mt-2"><b>Your Answer:</b> ${String(ua).toUpperCase()}</p>
-        ${q.explanation?`<p class="mt-2"><b>Explanation:</b> ${q.explanation}</p>`:''}
-      `;
-      updateNav();
-    }
-
-    function updateNav(){
-      document.querySelector('button[onclick="prevReviewQuestion()"]').disabled=currentReviewIndex<=0;
-      document.querySelector('button[onclick="nextReviewQuestion()"]').disabled=currentReviewIndex>=reviewableQuestions.length-1;
-    }
-
-    function prevReviewQuestion(){if(currentReviewIndex>0)renderReviewQuestion(currentReviewIndex-1);}
-    function nextReviewQuestion(){if(currentReviewIndex<reviewableQuestions.length-1)renderReviewQuestion(currentReviewIndex+1);}
-
-    /* ========= Tabs & Correct Answers Nav ========= */
+    /* ========= TABS ========= */
     function switchTab(tab) {
-      if (tab === "your") {
-        document.getElementById("yourReviewSection").classList.remove("hidden");
-        document.getElementById("correctReviewSection").classList.add("hidden");
-
-        tabYour.classList.add("bg-blue-600","text-white");
-        tabYour.classList.remove("bg-gray-300");
-        tabCorrect.classList.remove("bg-blue-600","text-white");
-        tabCorrect.classList.add("bg-gray-300");
-      } else {
-        document.getElementById("yourReviewSection").classList.add("hidden");
-        document.getElementById("correctReviewSection").classList.remove("hidden");
-
-        tabCorrect.classList.add("bg-blue-600","text-white");
-        tabCorrect.classList.remove("bg-gray-300");
-        tabYour.classList.remove("bg-blue-600","text-white");
-        tabYour.classList.add("bg-gray-300");
-
-        renderCorrectAnswers(); // initialize nav & first question
-      }
-    }
-
-    function renderCorrectAnswers() {
-      const sel = document.getElementById("correctSelect");
-      sel.innerHTML = "";
-
-      // Fill dropdown
-      questions.forEach((_, i) => {
-        const opt = document.createElement("option");
-        opt.value = i;
-        opt.textContent = `Question ${i + 1}`;
-        sel.appendChild(opt);
+      const tabs = ['correct','wrong','unattempted'];
+      tabs.forEach(t=>{
+        document.getElementById(t==='correct'?'correctReviewSection':t==='wrong'?'wrongReviewSection':'unattemptedReviewSection')
+          .classList.toggle('hidden', t!==tab);
+        const btn = document.getElementById(t==='correct'?'tabCorrect':t==='wrong'?'tabWrong':'tabUnattempted');
+        if(t===tab){ btn.classList.add("bg-blue-600","text-white"); btn.classList.remove("bg-gray-300","text-gray-900"); }
+        else { btn.classList.add("bg-gray-300","text-gray-900"); btn.classList.remove("bg-blue-600","text-white"); }
       });
 
-      sel.onchange = function () {
-        correctIndex = parseInt(this.value);
-        showCorrectQuestion();
-      };
-
-      correctIndex = 0;
-      showCorrectQuestion();
+      if(tab==='correct') renderCorrectInit();
+      if(tab==='wrong')   renderWrongInit();
+      if(tab==='unattempted') renderUnattemptedInit();
     }
 
-    function showCorrectQuestion() {
-      const q = questions[correctIndex];
-
-      const optionKeys = ['a', 'b', 'c', 'd', 'e']
-        .filter(k => q[k] && String(q[k]).trim() !== '');
-
-      let html = `
-        <h3 class="font-semibold text-lg mb-2">Q${correctIndex + 1}: ${q.q}</h3>
-        ${optionKeys.map(o => `
-          <p class="${o === q.ans ? 'text-green-700 font-bold' : ''}">
-            ${o.toUpperCase()}: ${q[o]} 
-            ${o === q.ans ? '(Correct)' : ''}
-          </p>
-        `).join('')}
-      `;
-
-      document.getElementById("correctArea").innerHTML = html;
-      document.getElementById("correctSelect").value = correctIndex;
-
-      updateCorrectNavButtons();
+    /* ========= CORRECT TAB ========= */
+    function renderCorrectInit(){
+      const sel=document.getElementById('correctSelect'); sel.innerHTML="";
+      questions.forEach((_,i)=>{ const o=document.createElement('option'); o.value=i;o.textContent=`Question ${i+1}`; sel.appendChild(o); });
+      sel.onchange=function(){ correctIndex=parseInt(this.value); showCorrectQuestion(); };
+      correctIndex=0; showCorrectQuestion();
     }
+    function showCorrectQuestion(){
+      const q=questions[correctIndex];
+      const keys=['a','b','c','d','e'].filter(k=>q[k]&&String(q[k]).trim()!=='');
+      const html=`<h3 class="font-semibold text-lg mb-2">Q${correctIndex+1}: ${q.q}</h3>
+        ${keys.map(o=>`<p class="${o===q.ans?'text-green-700 font-bold':''}">${o.toUpperCase()}: ${q[o]} ${o===q.ans?'(Correct)':''}</p>`).join('')}`;
+      document.getElementById('correctArea').innerHTML=html;
+      document.getElementById('correctSelect').value=correctIndex;
+      document.getElementById('prevCorrectBtn').disabled=correctIndex<=0;
+      document.getElementById('nextCorrectBtn').disabled=correctIndex>=questions.length-1;
+    }
+    function prevCorrect(){ if(correctIndex>0){correctIndex--; showCorrectQuestion();} }
+    function nextCorrect(){ if(correctIndex<questions.length-1){correctIndex++; showCorrectQuestion();} }
 
-    function prevCorrect() {
-      if (correctIndex > 0) {
-        correctIndex--;
-        showCorrectQuestion();
+    /* ========= WRONG TAB ========= */
+    function renderWrongInit(){
+      const sel=document.getElementById('wrongSelect'); sel.innerHTML="";
+      if(wrongList.length===0){
+        document.getElementById('wrongArea').innerHTML="<p class='text-gray-600'>No wrong answers 🎉</p>";
+        document.getElementById('prevWrongBtn').disabled=true;
+        document.getElementById('nextWrongBtn').disabled=true;
+        return;
       }
+      wrongList.forEach((qi,idx)=>{ const o=document.createElement('option'); o.value=idx; o.textContent=`Question ${qi+1}`; sel.appendChild(o); });
+      sel.onchange=function(){ wrongIndex=parseInt(this.value); showWrongQuestion(); };
+      wrongIndex=0; showWrongQuestion();
     }
+    function showWrongQuestion(){
+      const qIndex=wrongList[wrongIndex];
+      const q=questions[qIndex];
+      const ua=answers[qIndex]||"None";
+      const keys=['a','b','c','d','e'].filter(k=>q[k]&&String(q[k]).trim()!=='');
+      const html=`<h3 class="font-semibold text-lg mb-2">Q${qIndex+1}: ${q.q}</h3>
+        ${keys.map(o=>`<p class="${o===q.ans?'text-green-700 font-bold': ua===o?'text-red-600 font-semibold':''}">
+          ${o.toUpperCase()}: ${q[o]} ${o===q.ans?'(Correct)': ua===o?'(Your Answer)':''}
+        </p>`).join('')}
+        <p class="mt-2"><b>Your Answer:</b> ${String(ua).toUpperCase()}</p>`;
+      document.getElementById('wrongArea').innerHTML=html;
+      document.getElementById('wrongSelect').value=wrongIndex;
+      document.getElementById('prevWrongBtn').disabled=wrongIndex<=0;
+      document.getElementById('nextWrongBtn').disabled=wrongIndex>=wrongList.length-1;
+    }
+    function prevWrong(){ if(wrongIndex>0){ wrongIndex--; showWrongQuestion(); } }
+    function nextWrong(){ if(wrongIndex<wrongList.length-1){ wrongIndex++; showWrongQuestion(); } }
 
-    function nextCorrect() {
-      if (correctIndex < questions.length - 1) {
-        correctIndex++;
-        showCorrectQuestion();
+    /* ========= UNATTEMPTED TAB ========= */
+    function renderUnattemptedInit(){
+      const sel=document.getElementById('unattemptedSelect'); sel.innerHTML="";
+      if(unattemptedList.length===0){
+        document.getElementById('unattemptedArea').innerHTML="<p class='text-gray-600'>No unattempted questions 🎯</p>";
+        document.getElementById('prevUnattemptedBtn').disabled=true;
+        document.getElementById('nextUnattemptedBtn').disabled=true;
+        return;
       }
+      unattemptedList.forEach((qi,idx)=>{ const o=document.createElement('option'); o.value=idx; o.textContent=`Question ${qi+1}`; sel.appendChild(o); });
+      sel.onchange=function(){ unattemptedIndex=parseInt(this.value); showUnattemptedQuestion(); };
+      unattemptedIndex=0; showUnattemptedQuestion();
     }
-
-    function updateCorrectNavButtons() {
-      document.getElementById("prevCorrectBtn").disabled = correctIndex <= 0;
-      document.getElementById("nextCorrectBtn").disabled = correctIndex >= questions.length - 1;
+    function showUnattemptedQuestion(){
+      const qIndex=unattemptedList[unattemptedIndex];
+      const q=questions[qIndex];
+      const keys=['a','b','c','d','e'].filter(k=>q[k]&&String(q[k]).trim()!=='');
+      const html=`<h3 class="font-semibold text-lg mb-2">Q${qIndex+1}: ${q.q}</h3>
+        ${keys.map(o=>`<p class="${o===q.ans?'text-green-700 font-bold':''}">
+          ${o.toUpperCase()}: ${q[o]} ${o===q.ans?'(Correct)':''}
+        </p>`).join('')}
+        <p class="mt-2"><b>Your Answer:</b> None</p>`;
+      document.getElementById('unattemptedArea').innerHTML=html;
+      document.getElementById('unattemptedSelect').value=unattemptedIndex;
+      document.getElementById('prevUnattemptedBtn').disabled=unattemptedIndex<=0;
+      document.getElementById('nextUnattemptedBtn').disabled=unattemptedIndex>=unattemptedList.length-1;
     }
+    function prevUnattempted(){ if(unattemptedIndex>0){ unattemptedIndex--; showUnattemptedQuestion(); } }
+    function nextUnattempted(){ if(unattemptedIndex<unattemptedList.length-1){ unattemptedIndex++; showUnattemptedQuestion(); } }
 
     function viewResult(s){
       setName=s;
@@ -797,58 +702,56 @@
       const a=attempts[s];
       questions=JSON.parse(localStorage.getItem('sets'))[s];
       answers=a.answers;
+
+      // rebuild wrong/unattempted lists
+      wrongList=[]; unattemptedList=[];
+      answers.forEach((ans,i)=>{
+        if(ans===null) unattemptedList.push(i);
+        else if(ans!==questions[i].ans) wrongList.push(i);
+      });
+
       resultStats.innerHTML=`
         <p><b>Set:</b> ${s}</p>
         <p><b>Total:</b> ${a.total}</p>
         <p><b>Attempted:</b> ${a.attempted}</p>
         <p><b>Correct:</b> ${a.correct}</p>
         <p><b>Wrong:</b> ${a.wrong}</p>
+        <p><b>Unattempted:</b> ${a.total - a.attempted}</p>
         <p class="mt-2 text-xl font-bold">Score: ${a.score.toFixed(2)}</p>`;
-      reviewableQuestions=[];
-      answers.forEach((x,i)=>{if(x!==questions[i].ans||x===null)reviewableQuestions.push(i);});
+
       if(resultChartInstance)resultChartInstance.destroy();
       resultChartInstance=new Chart(resultChart,{
         type:'pie',
-        data:{
-          labels:["Correct","Wrong","Unattempted"],
-          datasets:[{data:[a.correct,a.wrong,a.total-a.attempted],backgroundColor:["#10B981","#EF4444","#6366F1"]}]
-        }
+        data:{ labels:["Correct","Wrong","Unattempted"], datasets:[{data:[a.correct,a.wrong,a.total-a.attempted],backgroundColor:["#10B981","#EF4444","#6366F1"]}]}
       });
+
       show('resultPanel');
-      if(reviewableQuestions.length>0)renderReviewQuestion(0);
-      switchTab('your');
+      switchTab('correct');
     }
 
     async function downloadPDF(){
       const {jsPDF}=window.jspdf;
       const doc=new jsPDF();
       let y=10;
-
-      doc.setFontSize(18);
-      doc.text(`CBT Result - ${setName}`,10,y);y+=10;
+      doc.setFontSize(18); doc.text(`CBT Result - ${setName}`,10,y); y+=10;
 
       questions.forEach((q,i)=>{
         const ua=answers[i]?String(answers[i]).toUpperCase():'None';
         const ca=String(q.ans || '').toUpperCase();
-
-        // Build dynamic options block A-E
-        const optionKeys = ['a','b','c','d','e'].filter(k => q[k] !== undefined && q[k] !== null && String(q[k]).trim() !== '');
-        const optionsText = optionKeys.map(k => `${k.toUpperCase()}: ${q[k]}`).join('\n');
-
+        const optionKeys=['a','b','c','d','e'].filter(k=>q[k]!==undefined && q[k]!==null && String(q[k]).trim()!=='');
+        const optionsText=optionKeys.map(k=>`${k.toUpperCase()}: ${q[k]}`).join('\n');
         let block=`Q${i+1}: ${q.q}
 ${optionsText}
 Your Answer: ${ua} | Correct: ${ca}`;
         if(q.explanation)block+=`\nExplanation: ${q.explanation}`;
         const split=doc.splitTextToSize(block,180);
         if(y+split.length*6>280){doc.addPage();y=10;}
-        doc.text(split,10,y);
-        y+=split.length*6+5;
+        doc.text(split,10,y); y+=split.length*6+5;
       });
-
       doc.save(`${setName}_Result.pdf`);
     }
 
-    // Seed initial data (Demo + 5-option capable GK set)
+    // Seed initial data
     (function seed(){
       const sets=JSON.parse(localStorage.getItem('sets')||'{}');
       if(Object.keys(sets).length===0){
@@ -859,39 +762,14 @@ Your Answer: ${ua} | Correct: ${ca}`;
             {q:"Sun rises in the...",a:"North",b:"South",c:"East",d:"West",ans:"c"}
           ],
           "General Knowledge Set 1": [
-            {
-              q: "What is the capital of India?",
-              a: "Mumbai",
-              b: "Delhi",
-              c: "Kolkata",
-              d: "Chennai",
-              e: "Pune",
-              ans: "b"
-            },
-            {
-              q: "Which language is used to style web pages?",
-              a: "HTML",
-              b: "Python",
-              c: "CSS",
-              d: "C++",
-              e: "Js",
-              ans: "c"
-            },
-            {
-              q: "Which planet is known as the Red Planet?",
-              a: "Earth",
-              b: "Mars",
-              c: "Jupiter",
-              d: "Venus",
-              e: "",
-              ans: "b"
-            }
+            { q: "What is the capital of India?", a: "Mumbai", b: "Delhi", c: "Kolkata", d: "Chennai", e: "Pune", ans: "b" },
+            { q: "Which language is used to style web pages?", a: "HTML", b: "Python", c: "CSS", d: "C++", e: "Js", ans: "c" },
+            { q: "Which planet is known as the Red Planet?", a: "Earth", b: "Mars", c: "Jupiter", d: "Venus", e: "", ans: "b" }
           ]
         };
         localStorage.setItem('sets',JSON.stringify(seeded));
       }
     })();
-
   </script>
 
 </body>

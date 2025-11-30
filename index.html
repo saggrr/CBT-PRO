@@ -15,7 +15,7 @@
       theme: {
         extend: {
           boxShadow: { soft: '0 10px 30px rgba(0,0,0,.06)' },
-          transitionProperty: { 'spacing': 'margin, padding' }
+          transitionProperty: { spacing: 'margin, padding' }
         }
       }
     }
@@ -33,7 +33,7 @@
 <body class="bg-gray-100 font-sans text-gray-900">
 
   <!-- ========================== -->
-  <!-- 🌟 UPDATED TOP NAVBAR 🌟 -->
+  <!-- 🌟 TOP NAVBAR 🌟 -->
   <!-- ========================== -->
   <header class="sticky top-0 z-40 border-b border-gray-200 bg-white/80 backdrop-blur">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
@@ -46,19 +46,14 @@
 
       <!-- Right Side Buttons -->
       <div class="flex items-center gap-3">
-
-        <!-- Home -->
         <button onclick="goToHome()" 
           class="hidden sm:inline-flex px-3 py-1.5 rounded-lg border border-gray-200 text-sm hover:bg-gray-50 transition">
           Home
         </button>
-
-        <!-- 🌟 Beautiful Logout Button -->
         <button onclick="logout()" 
           class="px-4 py-2 rounded-xl bg-red-600 text-white font-semibold shadow-soft hover:bg-red-700 transition">
           Logout
         </button>
-
       </div>
 
     </div>
@@ -122,7 +117,7 @@
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
         <button onclick="goToTestSelection()" class="bg-blue-600 text-white py-12 rounded-2xl text-2xl font-bold shadow-soft">Start New Test</button>
         <button onclick="loadAttemptedTests(); show('userDashboard')" class="bg-indigo-600 text-white py-12 rounded-2xl text-2xl font-bold shadow-soft">My Performance</button>
-        <button class="bg-emerald-600 text-white py-12 rounded-2xl text-2xl font-bold shadow-soft" onclick="alert('Coming soon!')">Leaderboard</button>
+        <button class="bg-emerald-600 text-white py-12 rounded-2xl text-2xl font-bold shadow-soft" onclick="showAlert('Coming Soon','Leaderboard is coming soon!')">Leaderboard</button>
       </div>
     </div>
   </section>
@@ -208,16 +203,52 @@
     <canvas id="resultChart" class="max-w-xs mx-auto"></canvas>
 
     <div class="mt-6">
-      <h3 class="font-semibold mb-2">Review Questions</h3>
-      <div id="reviewSummary" class="mb-4 text-sm"></div>
+      <h3 class="font-semibold mb-4 text-xl">Review Panel</h3>
 
-      <div class="flex gap-2 mb-4">
-        <button onclick="prevReviewQuestion()" class="bg-gray-700 text-white py-2 px-4 rounded-lg" disabled>Prev</button>
-        <select id="reviewSelect" class="flex-1 p-2 border rounded-lg"></select>
-        <button onclick="nextReviewQuestion()" class="bg-gray-700 text-white py-2 px-4 rounded-lg" disabled>Next</button>
+      <!-- Tabs -->
+      <div class="flex gap-3 mb-4">
+        <button id="tabYour" onclick="switchTab('your')" 
+          class="px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold">
+          Your Answers
+        </button>
+
+        <button id="tabCorrect" onclick="switchTab('correct')" 
+          class="px-4 py-2 rounded-lg bg-gray-300 text-gray-900 font-semibold">
+          Correct Answers
+        </button>
       </div>
 
-      <div id="reviewArea" class="border p-5 rounded-xl bg-gray-50"></div>
+      <!-- Your Answers Section -->
+      <div id="yourReviewSection">
+        <div id="reviewSummary" class="mb-4 text-sm"></div>
+
+        <div class="flex gap-2 mb-4">
+          <button onclick="prevReviewQuestion()" class="bg-gray-700 text-white py-2 px-4 rounded-lg" disabled>Prev</button>
+          <select id="reviewSelect" class="flex-1 p-2 border rounded-lg"></select>
+          <button onclick="nextReviewQuestion()" class="bg-gray-700 text-white py-2 px-4 rounded-lg" disabled>Next</button>
+        </div>
+
+        <div id="reviewArea" class="border p-5 rounded-xl bg-gray-50"></div>
+      </div>
+
+      <!-- Correct Answers Section (Navigation-based) -->
+      <div id="correctReviewSection" class="hidden">
+        <div class="flex gap-2 mb-4">
+          <button onclick="prevCorrect()" id="prevCorrectBtn"
+            class="bg-gray-700 text-white py-2 px-4 rounded-lg" disabled>
+            Prev
+          </button>
+
+          <select id="correctSelect" class="flex-1 p-2 border rounded-lg"></select>
+
+          <button onclick="nextCorrect()" id="nextCorrectBtn"
+            class="bg-gray-700 text-white py-2 px-4 rounded-lg" disabled>
+            Next
+          </button>
+        </div>
+
+        <div id="correctArea" class="border p-5 rounded-xl bg-green-50"></div>
+      </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
@@ -227,10 +258,95 @@
     </div>
   </section>
 
+  <!-- BEAUTIFUL ALERT MODAL -->
+  <div id="alertModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-[9999]">
+    <div class="bg-white w-[90%] max-w-md p-6 rounded-2xl shadow-xl fade-in">
+      <h3 id="alertTitle" class="text-2xl font-bold text-center mb-3 text-blue-700">Alert</h3>
+      <p id="alertMessage" class="text-gray-700 text-center leading-relaxed"></p>
+      <div class="mt-6 flex justify-center">
+        <button onclick="closeAlert()" 
+          class="px-5 py-2 bg-blue-600 text-white rounded-xl font-semibold shadow hover:bg-blue-700 transition">
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEST SETTINGS MODAL -->
+  <div id="settingsModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden items-center justify-center z-[9999]">
+    <div class="bg-white w-[90%] max-w-md p-6 rounded-2xl shadow-xl fade-in">
+      <h3 class="text-2xl font-bold text-center mb-4 text-indigo-700">Test Settings</h3>
+
+      <label class="block mb-3">
+        <span class="font-semibold text-gray-700">Test Duration (minutes)</span>
+        <input id="durationInput" type="number" min="1"
+          class="w-full mt-1 p-3 border rounded-xl"
+          placeholder="Enter duration (e.g., 90)">
+      </label>
+
+      <label class="block mb-3">
+        <span class="font-semibold text-gray-700">Negative Mark per Wrong Answer</span>
+        <input id="negativeInput" type="number" step="0.01" min="0"
+          class="w-full mt-1 p-3 border rounded-xl"
+          placeholder="Enter negative marking (e.g., 0.25)">
+      </label>
+
+      <div class="mt-6 flex justify-center gap-3">
+        <button onclick="closeSettings()"
+          class="px-5 py-2 bg-gray-600 text-white rounded-xl shadow hover:bg-gray-700 transition">
+          Cancel
+        </button>
+        <button onclick="saveSettings()"
+          class="px-5 py-2 bg-blue-600 text-white rounded-xl shadow hover:bg-blue-700 transition">
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- =================== -->
   <!-- MAIN SCRIPT        -->
   <!-- =================== -->
   <script>
+    /* ========= ALERT HELPERS ========= */
+    function showAlert(title, message){
+      document.getElementById("alertTitle").textContent = title || "Alert";
+      const msg = document.getElementById("alertMessage");
+      msg.innerHTML = message || "";
+      const m = document.getElementById("alertModal");
+      m.classList.remove("hidden"); m.classList.add("flex");
+    }
+    function closeAlert(){
+      const m = document.getElementById("alertModal");
+      m.classList.add("hidden"); m.classList.remove("flex");
+    }
+
+    /* ========= SETTINGS MODAL ========= */
+    let _afterSettings = null; // callback after saving
+    function openSettings(cb) {
+      _afterSettings = typeof cb === 'function' ? cb : null;
+      document.getElementById("durationInput").value = userTestDuration;
+      document.getElementById("negativeInput").value = negativeMark;
+      const m = document.getElementById("settingsModal");
+      m.classList.remove("hidden"); m.classList.add("flex");
+    }
+    function closeSettings() {
+      const m = document.getElementById("settingsModal");
+      m.classList.add("hidden"); m.classList.remove("flex");
+      _afterSettings = null;
+    }
+    function saveSettings() {
+      const d = parseInt(document.getElementById("durationInput").value);
+      const n = parseFloat(document.getElementById("negativeInput").value);
+
+      if (!isNaN(d) && d > 0) userTestDuration = d;
+      if (!isNaN(n) && n >= 0) negativeMark = n;
+
+      const cb = _afterSettings;
+      closeSettings();
+      showAlert("Settings Saved", `Duration: ${userTestDuration} minutes<br>Negative Mark: -${negativeMark}`);
+      if (cb) cb();
+    }
 
     const admin={email:"admin@admin.com",pass:"1234"};
     const user={email:"user@user.com",pass:"1234"};
@@ -239,6 +355,13 @@
     let currentQ=0,setName="",timeLeft=0,timerInterval;
     let reviewableQuestions=[],currentReviewIndex=-1;
     let resultChartInstance=null;
+
+    /* ✅ NEW: Correct Answers navigation state */
+    let correctIndex = 0;
+
+    /* 🔥 NEW: User-selected settings */
+    let userTestDuration = 90;   // default 90 mins
+    let negativeMark = 0.25;     // default -0.25
 
     function show(id){
       ["loginPanel","userHome","userDashboard","adminPanel","testContainer","resultPanel"].forEach(i=>document.getElementById(i).classList.add("hidden"));
@@ -253,7 +376,7 @@
         welcomeName.textContent=e.split("@")[0];
         loadSetList('user');loadAttemptedTests();refreshHomeStats();
         show('userHome');
-      }else alert("Invalid login");
+      }else showAlert("Login Failed","Invalid email or password.");
     }
 
     function logout(){clearInterval(timerInterval);show('loginPanel');}
@@ -277,14 +400,16 @@
     function uploadSet(){
       try{
         const d=JSON.parse(jsonUpload.value);
-        if(!d.name||!Array.isArray(d.questions))throw "";
+        if(!d.name||!Array.isArray(d.questions))throw new Error("Missing name/questions");
         const all=JSON.parse(localStorage.getItem('sets')||'{}');
         all[d.name]=d.questions;
         localStorage.setItem('sets',JSON.stringify(all));
         jsonUpload.value="";
         loadSetList('admin');
-        alert("Set uploaded");
-      }catch{alert("Invalid JSON");}
+        showAlert("Success","Set uploaded successfully.");
+      }catch(err){
+        showAlert("Invalid JSON","Please provide a valid JSON with { name, questions[] }.");
+      }
     }
 
     function deleteSet(n){
@@ -295,6 +420,7 @@
       delete attempts[n];
       localStorage.setItem('userAttempts',JSON.stringify(attempts));
       loadSetList('admin');
+      showAlert("Deleted",`Set "${n}" has been removed.`);
     }
 
     function refreshHomeStats(){
@@ -359,31 +485,37 @@
       });
     }
 
+    // Settings flow replaces prompts
     function startUserTest(){
       setName=setSelect.value;
-      if(!setName)return alert("Select a set");
-      const sets=JSON.parse(localStorage.getItem('sets'));
-      questions=sets[setName];
-      answers=Array(questions.length).fill(null);
-      status=Array(questions.length).fill('notVisited');
-      currentQ=0;
-      renderPalette();
-      startTimer();
-      renderQuestion();
-      show('testContainer');
+      if(!setName)return showAlert("Select a Set","Please select a test set to continue.");
+
+      openSettings(()=>{
+        const sets=JSON.parse(localStorage.getItem('sets'));
+        questions=sets[setName];
+        answers=Array(questions.length).fill(null);
+        status=Array(questions.length).fill('notVisited');
+        currentQ=0;
+        renderPalette();
+        startTimer();
+        renderQuestion();
+        show('testContainer');
+      });
     }
 
     function reattemptTest(s){
       setName=s;
-      const sets=JSON.parse(localStorage.getItem('sets'));
-      questions=sets[setName];
-      answers=Array(questions.length).fill(null);
-      status=Array(questions.length).fill('notVisited');
-      currentQ=0;
-      renderPalette();
-      startTimer();
-      renderQuestion();
-      show('testContainer');
+      openSettings(()=>{
+        const sets=JSON.parse(localStorage.getItem('sets'));
+        questions=sets[setName];
+        answers=Array(questions.length).fill(null);
+        status=Array(questions.length).fill('notVisited');
+        currentQ=0;
+        renderPalette();
+        startTimer();
+        renderQuestion();
+        show('testContainer');
+      });
     }
 
     function renderPalette(){
@@ -414,9 +546,13 @@
 
     function renderQuestion(){
       const q=questions[currentQ];
+
+      // Dynamically include up to 5 options (a-e)
+      const optionKeys = ['a','b','c','d','e'].filter(k => q[k] !== undefined && q[k] !== null && String(q[k]).trim() !== '');
+
       questionArea.innerHTML=`
         <h3 class="font-semibold mb-2">Q${currentQ+1}: ${q.q}</h3>
-        ${['a','b','c','d'].map(o=>`
+        ${optionKeys.map(o=>`
           <label class="block mt-2">
             <input type="radio" name="opt" value="${o}" ${answers[currentQ]===o?'checked':''} class="mr-2"/>
             <span class="inline-flex items-start gap-2 rounded-xl px-3 py-2 border bg-white">
@@ -464,7 +600,8 @@
 
     function startTimer(){
       clearInterval(timerInterval);
-      timeLeft=90*60;
+      timeLeft = userTestDuration * 60;  // 🔥 dynamic time
+
       timerInterval=setInterval(()=>{
         let m=Math.floor(timeLeft/60),s=timeLeft%60;
         timer.textContent=`Time: ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
@@ -484,7 +621,8 @@
         }
         if(a!==questions[i].ans||a===null)reviewableQuestions.push(i);
       });
-      const score=correct-wrong*0.25;
+
+      const score = correct - wrong * negativeMark;  // 🔥 dynamic negative marking
 
       const attempts=JSON.parse(localStorage.getItem('userAttempts')||'{}');
       attempts[setName]={score,correct,wrong,attempted,total:questions.length,answers:answers.slice()};
@@ -500,6 +638,7 @@
         <p><b>Attempted:</b> ${attempted}</p>
         <p><b>Correct:</b> ${correct}</p>
         <p><b>Wrong:</b> ${wrong}</p>
+        <p><b>Negative Marking:</b> -${negativeMark}</p>
         <p class="mt-2 text-xl font-bold">Score: ${score.toFixed(2)}</p>`;
 
       if(resultChartInstance)resultChartInstance.destroy();
@@ -531,6 +670,8 @@
 
       show('resultPanel');
       if(reviewableQuestions.length>0)renderReviewQuestion(0);
+      // default to "Your Answers" tab on result
+      switchTab('your');
       refreshHomeStats();
     }
 
@@ -540,14 +681,18 @@
       }
       currentReviewIndex=idx;
       const i=reviewableQuestions[idx],q=questions[i],ua=answers[i]||"None";
+
+      // dynamic options for review
+      const optionKeys = ['a','b','c','d','e'].filter(k => q[k] !== undefined && q[k] !== null && String(q[k]).trim() !== '');
+
       reviewSelect.value=i;
       reviewArea.innerHTML=`
         <h3 class="font-semibold text-lg">Q${i+1}: ${q.q}</h3>
-        ${['a','b','c','d'].map(o=>`
+        ${optionKeys.map(o=>`
           <p class="${o===q.ans?'text-green-600 font-bold':ua===o?'text-red-600':''}">
             ${o.toUpperCase()}: ${q[o]} ${o===q.ans?'(Correct)':ua===o?'(Your Answer)':''}
           </p>`).join('')}
-        <p class="mt-2"><b>Your Answer:</b> ${ua.toUpperCase()}</p>
+        <p class="mt-2"><b>Your Answer:</b> ${String(ua).toUpperCase()}</p>
         ${q.explanation?`<p class="mt-2"><b>Explanation:</b> ${q.explanation}</p>`:''}
       `;
       updateNav();
@@ -560,6 +705,91 @@
 
     function prevReviewQuestion(){if(currentReviewIndex>0)renderReviewQuestion(currentReviewIndex-1);}
     function nextReviewQuestion(){if(currentReviewIndex<reviewableQuestions.length-1)renderReviewQuestion(currentReviewIndex+1);}
+
+    /* ========= Tabs & Correct Answers Nav ========= */
+    function switchTab(tab) {
+      if (tab === "your") {
+        document.getElementById("yourReviewSection").classList.remove("hidden");
+        document.getElementById("correctReviewSection").classList.add("hidden");
+
+        tabYour.classList.add("bg-blue-600","text-white");
+        tabYour.classList.remove("bg-gray-300");
+        tabCorrect.classList.remove("bg-blue-600","text-white");
+        tabCorrect.classList.add("bg-gray-300");
+      } else {
+        document.getElementById("yourReviewSection").classList.add("hidden");
+        document.getElementById("correctReviewSection").classList.remove("hidden");
+
+        tabCorrect.classList.add("bg-blue-600","text-white");
+        tabCorrect.classList.remove("bg-gray-300");
+        tabYour.classList.remove("bg-blue-600","text-white");
+        tabYour.classList.add("bg-gray-300");
+
+        renderCorrectAnswers(); // initialize nav & first question
+      }
+    }
+
+    function renderCorrectAnswers() {
+      const sel = document.getElementById("correctSelect");
+      sel.innerHTML = "";
+
+      // Fill dropdown
+      questions.forEach((_, i) => {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = `Question ${i + 1}`;
+        sel.appendChild(opt);
+      });
+
+      sel.onchange = function () {
+        correctIndex = parseInt(this.value);
+        showCorrectQuestion();
+      };
+
+      correctIndex = 0;
+      showCorrectQuestion();
+    }
+
+    function showCorrectQuestion() {
+      const q = questions[correctIndex];
+
+      const optionKeys = ['a', 'b', 'c', 'd', 'e']
+        .filter(k => q[k] && String(q[k]).trim() !== '');
+
+      let html = `
+        <h3 class="font-semibold text-lg mb-2">Q${correctIndex + 1}: ${q.q}</h3>
+        ${optionKeys.map(o => `
+          <p class="${o === q.ans ? 'text-green-700 font-bold' : ''}">
+            ${o.toUpperCase()}: ${q[o]} 
+            ${o === q.ans ? '(Correct)' : ''}
+          </p>
+        `).join('')}
+      `;
+
+      document.getElementById("correctArea").innerHTML = html;
+      document.getElementById("correctSelect").value = correctIndex;
+
+      updateCorrectNavButtons();
+    }
+
+    function prevCorrect() {
+      if (correctIndex > 0) {
+        correctIndex--;
+        showCorrectQuestion();
+      }
+    }
+
+    function nextCorrect() {
+      if (correctIndex < questions.length - 1) {
+        correctIndex++;
+        showCorrectQuestion();
+      }
+    }
+
+    function updateCorrectNavButtons() {
+      document.getElementById("prevCorrectBtn").disabled = correctIndex <= 0;
+      document.getElementById("nextCorrectBtn").disabled = correctIndex >= questions.length - 1;
+    }
 
     function viewResult(s){
       setName=s;
@@ -586,6 +816,7 @@
       });
       show('resultPanel');
       if(reviewableQuestions.length>0)renderReviewQuestion(0);
+      switchTab('your');
     }
 
     async function downloadPDF(){
@@ -597,13 +828,15 @@
       doc.text(`CBT Result - ${setName}`,10,y);y+=10;
 
       questions.forEach((q,i)=>{
-        const ua=answers[i]?answers[i].toUpperCase():'None';
-        const ca=q.ans.toUpperCase();
+        const ua=answers[i]?String(answers[i]).toUpperCase():'None';
+        const ca=String(q.ans || '').toUpperCase();
+
+        // Build dynamic options block A-E
+        const optionKeys = ['a','b','c','d','e'].filter(k => q[k] !== undefined && q[k] !== null && String(q[k]).trim() !== '');
+        const optionsText = optionKeys.map(k => `${k.toUpperCase()}: ${q[k]}`).join('\n');
+
         let block=`Q${i+1}: ${q.q}
-A: ${q.a}
-B: ${q.b}
-C: ${q.c}
-D: ${q.d}
+${optionsText}
 Your Answer: ${ua} | Correct: ${ca}`;
         if(q.explanation)block+=`\nExplanation: ${q.explanation}`;
         const split=doc.splitTextToSize(block,180);
@@ -615,17 +848,47 @@ Your Answer: ${ua} | Correct: ${ca}`;
       doc.save(`${setName}_Result.pdf`);
     }
 
+    // Seed initial data (Demo + 5-option capable GK set)
     (function seed(){
       const sets=JSON.parse(localStorage.getItem('sets')||'{}');
       if(Object.keys(sets).length===0){
-        const demo={
+        const seeded = {
           "Demo Test":[
             {q:"2+2=?",a:"3",b:"4",c:"5",d:"6",ans:"b",explanation:"2+2=4"},
             {q:"Capital of France?",a:"Berlin",b:"Madrid",c:"Paris",d:"Rome",ans:"c"},
             {q:"Sun rises in the...",a:"North",b:"South",c:"East",d:"West",ans:"c"}
+          ],
+          "General Knowledge Set 1": [
+            {
+              q: "What is the capital of India?",
+              a: "Mumbai",
+              b: "Delhi",
+              c: "Kolkata",
+              d: "Chennai",
+              e: "Pune",
+              ans: "b"
+            },
+            {
+              q: "Which language is used to style web pages?",
+              a: "HTML",
+              b: "Python",
+              c: "CSS",
+              d: "C++",
+              e: "Js",
+              ans: "c"
+            },
+            {
+              q: "Which planet is known as the Red Planet?",
+              a: "Earth",
+              b: "Mars",
+              c: "Jupiter",
+              d: "Venus",
+              e: "",
+              ans: "b"
+            }
           ]
         };
-        localStorage.setItem('sets',JSON.stringify(demo));
+        localStorage.setItem('sets',JSON.stringify(seeded));
       }
     })();
 
